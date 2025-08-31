@@ -1,0 +1,10 @@
+{
+  "name": "sori-website",
+  "scripts": {
+    "build": "echo 'static site, nothing to build'",
+    "start": "npx serve -s . -l 3000"
+  },
+  "devDependencies": {
+    "serve": "^14.0.0"
+  }
+}
