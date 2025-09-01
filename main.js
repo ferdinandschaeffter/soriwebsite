@@ -15,21 +15,42 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+//color picker and clear button logic
+const colorPicker = document.getElementById('color-picker');
+const clearBtn = document.getElementById('clear-btn');
+
+let drawColor = colorPicker.value;
+
+colorPicker.addEventListener('input', (e) => {
+  drawColor = e.target.value;
+});
+
+
   // --- waveform code ---
 window.addEventListener('DOMContentLoaded', () => {
   const audio = document.querySelector('audio');
   const canvas = document.getElementById('waveform');
   const ctx = canvas.getContext('2d');
+  const drawCanvas = document.getElementById('draw-canvas');
+  const drawCtx = drawCanvas.getContext('2d');
 
-  function resizeCanvas() {
+
+  function resizeCanvas(canvas) {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   }
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas(canvas);
+  resizeCanvas(drawCanvas);
 
+  window.addEventListener('resize', () => {
+    resizeCanvas(canvas);
+    resizeCanvas(drawCanvas);
+  });
+
+  // ...rest of your code...
   let audioCtx, analyser, bufferLength, dataArray, source;
   let prevDataArray = null;
+  
 
   audio.addEventListener('play', () => {
     if (!audioCtx) {
@@ -60,8 +81,8 @@ window.addEventListener('DOMContentLoaded', () => {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Group FFT data to fewer bars
-    const numBars = 300;
-const gap = 2; // pixels between bars
+    const numBars = 75;
+const gap = 10; // pixels between bars
 const barWidth = (canvas.width - gap * (numBars - 1)) / numBars;
 
 for (let i = 0; i < numBars; i++) {
@@ -72,25 +93,44 @@ for (let i = 0; i < numBars; i++) {
   }
   const avg = sum / groupSize;
   const barHeight = avg * canvas.height / 256;
-  ctx.fillStyle = '#00ffe1ff';
+  ctx.fillStyle = '#00564cff';
   ctx.fillRect(i * (barWidth + gap), canvas.height - barHeight, barWidth, barHeight);
 }
   }
   // --- message board code ---
   const db = getDatabase(app);
+  const drawDb = ref(db, 'drawings');
   const messagesRef = ref(db, 'messages');
   const form = document.getElementById('msg-form');
   const usernameInput = document.getElementById('username-input');
   const input = document.getElementById('msg-input');
   const list = document.getElementById('msg-list');
+  const usernameColors = {};
 
+  function getUsernameColor(username) {
+  if (!usernameColors[username]) {
+    // Generate a random pastel color
+    const hue = Math.floor(Math.random() * 360);
+    usernameColors[username] = `hsl(${hue}, 70%, 60%)`;
+  }
+  return usernameColors[username];
+}
   // Display all messages
   onChildAdded(messagesRef, (snapshot) => {
     const msg = snapshot.val();
     const li = document.createElement('li');
     const time = new Date(msg.timestamp).toLocaleString();
-    li.textContent = `[${time}] ${msg.username}: ${msg.text}`;
-    list.appendChild(li);
+
+    // Create username span with color
+    const userSpan = document.createElement('span');
+    userSpan.textContent = msg.username;
+    userSpan.style.color = getUsernameColor(msg.username);
+    userSpan.style.fontWeight = 'bold';
+
+    li.textContent = `[${time}]`;
+    li.appendChild(userSpan);
+    li.appendChild(document.createTextNode(`: ${msg.text}`));
+    list.insertBefore(li, list.firstChild);
   });
 
   // Add new message
@@ -107,4 +147,64 @@ for (let i = 0; i < numBars; i++) {
     input.value = '';
   }
   });
+  // drawing logic
+  let drawing = false;
+
+drawCanvas.addEventListener('mousedown', (e) => {
+  drawing = true;
+  drawCtx.beginPath();
+  drawCtx.moveTo(e.clientX, e.clientY);
+   push(drawDb, {
+    x: e.clientX,
+    y: e.clientY,
+    color: drawColor,
+    start: true
+  });
+});
+
+drawCanvas.addEventListener('mousemove', (e) => {
+  if (drawing) {
+    const x = e.clientX;
+    const y = e.clientY;
+    drawCtx.lineTo(e.clientX, e.clientY);
+    drawCtx.strokeStyle = drawColor;
+    drawCtx.lineWidth = 3;
+    drawCtx.stroke();
+    push(drawDb, {
+      x, y, color: drawColor
+    });
+  }
+});
+
+drawCanvas.addEventListener('mouseup', () => {
+  drawing = false;
+});
+
+drawCanvas.addEventListener('mouseleave', () => {
+  drawing = false;
+});
+
+clearBtn.addEventListener('click', () => {
+  drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+  push(drawDb, { clear: true });   // broadcast the clear
+});
+
+onChildAdded(drawDb, (snapshot) => {
+  const data = snapshot.val();
+
+  if (data.clear) {                // <-- new branch
+    drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+    return;
+  }
+  const { x, y, color, start } = snapshot.val();
+  if (start) {
+    drawCtx.beginPath();
+    drawCtx.moveTo(x, y);
+  } else {
+    drawCtx.lineTo(x, y);
+    drawCtx.strokeStyle = color;
+    drawCtx.lineWidth = 3;
+    drawCtx.stroke();
+  }
+});
 });

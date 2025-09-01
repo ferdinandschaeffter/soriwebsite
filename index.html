@@ -2,8 +2,14 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
-  <title>:3</title>
+  <meta property="og:image" content="preview.png">
+  <title>sori site :7</title>
   <link rel="stylesheet" href="styles.css"> <!-- Falls du CSS nutzt -->
+  <link rel="icon" href="/bilder/favicon.png" type="image/png">
+  <nav>
+  <a href="music.html">Music</a>
+  </nav>
+  
 </head>
 <body>
   <!-- Titelbild -->
@@ -14,9 +20,9 @@
 
   <!-- Hauptinhalt -->
   <main>
-    <p> listen to "dedicatedTo:sora" </p>
+    <p> listen to dedicatedTo:sora</p>
     <div class="cover-container">
-      <img src="bilder/sora25.png" alt="cover" style="width:20%;height: auto;"> 
+      <img src="bilder/sora25.jpg" alt="cover" style="width:20%;height: auto;"> 
     </div>
   </main>
   
@@ -26,7 +32,9 @@
     <source src="audio/sora25newmix.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
-  
+  <main>
+    <p> coming to streaming 5.9 so like this friday </p>
+  </main>
   <!-- Nachrichtentafel -->
   <section id="leave a message o.o">
   <h2>leave a message o.o</h2>
@@ -40,6 +48,11 @@
  <!-- Wellenform-Canvas -->
   <main>
     <p></p>
+    <div id="draw-controls" style="position:fixed;top:10px;left:10px;z-index:100;">
+  <input type="color" id="color-picker" value="#ff69b4">
+  <button id="clear-btn">Clear</button>
+</div>
+    <canvas id="draw-canvas" width="auto" height="auto"></canvas>
     <canvas id="waveform" width="1920" height="1080"></canvas>
   </main>
   <!-- Fußzeile --> 
