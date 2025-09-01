@@ -1,10 +1,19 @@
+/* public/style.css */
+:root {
+  --bg: #111;
+  --fg: #fafafa;
+  --accent: #00c9a7;
+}
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  padding: 20px;
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
 }
-
-audio {
-  display: block;
-  margin: 20px auto;
-}
+header { text-align: center; }
+h1 { font-size: clamp(3rem, 8vw, 6rem); margin: 0; }
+audio { width: 100%; margin: 1rem 0; }
+footer { margin-top: 4rem; opacity: .5; }
