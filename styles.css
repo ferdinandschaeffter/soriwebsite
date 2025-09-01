@@ -1,8 +1,11 @@
 /* public/style.css */
 :root {
-  --bg: #111;
-  --fg: #fafafa;
+  --bg: #000000;
+  --fg: #ffffff;
   --accent: #00c9a7;
+}
+main p {
+  text-align: center;
 }
 body {
   margin: 0;
@@ -13,7 +16,26 @@ body {
   place-items: center;
   min-height: 100vh;
 }
+canvas#waveform {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200vw;
+  height: 100vh;
+  z-index: -1; /* Put it behind other content */
+  display: block;
+}
 header { text-align: center; }
+.cover-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
 h1 { font-size: clamp(3rem, 8vw, 6rem); margin: 0; }
-audio { width: 100%; margin: 1rem 0; }
+audio {
+  width: 300px;
+  margin: 1rem 0;
+  display: block;
+}
 footer { margin-top: 4rem; opacity: .5; }

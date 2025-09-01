@@ -8,23 +8,45 @@
 <body>
   <!-- Titelbild -->
   <header>
-    <img src="bilder/sorisorg.png" alt="Titelbild" style="width: 50%; height: auto;">
-    <h1>hello there</h1>
+    <img src="bilder/sorisorg.png" alt="Titelbild" style="width: 50%; height: auto;filter: invert(1);">
+    <h1></h1>
   </header>
 
   <!-- Hauptinhalt -->
   <main>
-    <p>im still building this website. in the mean time listen to my new song </p>
+    <p> listen to "dedicatedTo:sora" </p>
+    <div class="cover-container">
+      <img src="bilder/sora25.png" alt="cover" style="width:20%;height: auto;"> 
+    </div>
   </main>
-<!-- Audio player -->
-  <script src="main.js"></script>
+  
+  <!-- Audio player -->
+  
   <audio controls>
     <source src="audio/sora25newmix.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
-  <!-- Fußzeile -->
+  
+  <!-- Nachrichtentafel -->
+  <section id="leave a message o.o">
+  <h2>leave a message o.o</h2>
+  <form id="msg-form">
+    <input type="text" id="username-input" placeholder="Your name..." required>
+    <input type="text" id="msg-input" placeholder="Type your message..." required>
+    <button type="submit">Post</button>
+  </form>
+  <ul id="msg-list"></ul>
+</section>
+ <!-- Wellenform-Canvas -->
+  <main>
+    <p></p>
+    <canvas id="waveform" width="1920" height="1080"></canvas>
+  </main>
+  <!-- Fußzeile --> 
   <footer>
     <p>&copy; 2025 SORI</p>
   </footer>
+
+  <script type="module" src="main.js"></script>
 </body>
 </html>
