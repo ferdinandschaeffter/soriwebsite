@@ -151,7 +151,12 @@ for (let i = 0; i < numBars; i++) {
   let drawing = false;
 
 drawCanvas.addEventListener('mousedown', (e) => {
+  const rect = drawCanvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  if (e.target !== drawCanvas) return;
   drawing = true;
+  drawCanvas.classList.add('drawing');
   drawCtx.beginPath();
   drawCtx.moveTo(e.clientX, e.clientY);
    push(drawDb, {
@@ -178,10 +183,12 @@ drawCanvas.addEventListener('mousemove', (e) => {
 
 drawCanvas.addEventListener('mouseup', () => {
   drawing = false;
+  drawCanvas.classList.remove('drawing'); 
 });
 
 drawCanvas.addEventListener('mouseleave', () => {
   drawing = false;
+  drawCanvas.classList.remove('drawing'); 
 });
 
 clearBtn.addEventListener('click', () => {

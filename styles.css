@@ -27,15 +27,18 @@ canvas#waveform {
   left: 0;
   width: 200vw;
   height: 100vh;
-  z-index: -1; /* Put it behind other content */
+  z-index: -2; /* Put it behind other content */
   display: block;
 }
 #draw-canvas {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 2;
+  z-index: 1;
   pointer-events: auto;
+}
+#draw-canvas.drawing {
+  pointer-events: auto;/* only while the mouse is down */
 }
 header { text-align: center; }
 .cover-container {
@@ -49,5 +52,13 @@ audio {
   width: 300px;
   margin: 1rem 0;
   display: block;
+  z-index: 2;
 }
 footer { margin-top: 4rem; opacity: .5; }
+#color-picker,
+#clear-btn,
+#msg-form,
+#msg-list {
+  position: relative;   /* creates a new stacking context */
+  z-index: 2;           /* now these sit on top */
+}
